@@ -1,0 +1,665 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nissan Skyline GT-R R34 | La Leyenda Godzilla</title>
+<meta name="description" content="Un tributo interactivo al Nissan Skyline GT-R R34, la leyenda del automovilismo japonés.">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800;900&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+<style>
+  :root{
+    --black:#07070a;
+    --charcoal:#111116;
+    --steel:#1c1c24;
+    --gray:#8b8d97;
+    --white:#f4f5f7;
+    --blue:#0a6cff;
+    --blue-light:#4fa8ff;
+    --blue-deep:#053c99;
+    --font-display:'Montserrat', sans-serif;
+    --font-body:'Inter', sans-serif;
+  }
+
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    background:var(--black);
+    color:var(--white);
+    font-family:var(--font-body);
+    overflow-x:hidden;
+    line-height:1.6;
+  }
+  ::selection{background:var(--blue);color:#fff;}
+
+  h1,h2,h3,h4{font-family:var(--font-display);letter-spacing:0.5px;}
+
+  a{text-decoration:none;color:inherit;}
+  ul{list-style:none;}
+  img{max-width:100%;display:block;}
+
+  /* Scrollbar */
+  ::-webkit-scrollbar{width:8px;}
+  ::-webkit-scrollbar-track{background:var(--black);}
+  ::-webkit-scrollbar-thumb{background:var(--blue-deep);border-radius:10px;}
+
+  /* ===== NAV ===== */
+  .navbar{
+    position:fixed;top:0;left:0;width:100%;z-index:1000;
+    display:flex;align-items:center;justify-content:space-between;
+    padding:18px 6%;
+    background:rgba(7,7,10,0.35);
+    backdrop-filter:blur(14px);
+    -webkit-backdrop-filter:blur(14px);
+    border-bottom:1px solid rgba(255,255,255,0.06);
+    transition:background .4s ease, padding .4s ease, border-color .4s ease;
+  }
+  .navbar.scrolled{
+    background:rgba(7,7,10,0.85);
+    padding:12px 6%;
+    border-bottom:1px solid rgba(79,168,255,0.25);
+  }
+  .nav-logo{
+    font-family:var(--font-display);
+    font-weight:900;
+    font-size:1.15rem;
+    letter-spacing:2px;
+    display:flex;align-items:center;gap:8px;
+  }
+  .nav-logo span{color:var(--blue-light);}
+  .nav-links{
+    display:flex;gap:2.4rem;
+  }
+  .nav-links a{
+    position:relative;
+    font-size:0.85rem;
+    font-weight:600;
+    letter-spacing:1.5px;
+    text-transform:uppercase;
+    color:var(--white);
+    opacity:0.85;
+    padding:4px 0;
+    transition:opacity .3s ease, color .3s ease;
+  }
+  .nav-links a::after{
+    content:'';position:absolute;bottom:-2px;left:0;width:0%;height:2px;
+    background:linear-gradient(90deg,var(--blue),var(--blue-light));
+    transition:width .35s ease;
+  }
+  .nav-links a:hover{opacity:1;color:var(--blue-light);}
+  .nav-links a:hover::after{width:100%;}
+
+  .burger{
+    display:none;
+    flex-direction:column;gap:5px;
+    cursor:pointer;
+    z-index:1100;
+  }
+  .burger span{width:26px;height:2px;background:#fff;transition:.3s;}
+
+  /* ===== HERO ===== */
+  .hero{
+    position:relative;
+    height:100vh;
+    display:flex;align-items:center;justify-content:center;
+    text-align:center;
+    overflow:hidden;
+  }
+  .hero-bg{
+    position:absolute;inset:0;
+    background-image:
+      linear-gradient(180deg, rgba(7,7,10,0.35) 0%, rgba(7,7,10,0.55) 55%, rgba(7,7,10,1) 100%),
+      url('https://commons.wikimedia.org/wiki/Special:FilePath/Nissan%20SKYLINE%20GT-R%20(GF-BNR34)%20front.jpg?width=1920');
+    background-size:cover;
+    background-position:center 40%;
+    will-change:transform;
+    transform:scale(1.08);
+  }
+  .hero-grid{
+    position:absolute;inset:0;
+    background-image:
+      linear-gradient(rgba(79,168,255,0.05) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(79,168,255,0.05) 1px, transparent 1px);
+    background-size:48px 48px;
+    mask-image:linear-gradient(180deg, black, transparent 75%);
+    pointer-events:none;
+  }
+  .hero-content{
+    position:relative;z-index:2;
+    padding:0 1.2rem;
+    animation:heroIn 1.2s cubic-bezier(.2,.8,.2,1) both;
+  }
+  @keyframes heroIn{
+    from{opacity:0;transform:translateY(30px);}
+    to{opacity:1;transform:translateY(0);}
+  }
+  .hero-eyebrow{
+    display:inline-flex;align-items:center;gap:10px;
+    font-size:0.75rem;letter-spacing:4px;text-transform:uppercase;
+    color:var(--blue-light);font-weight:700;
+    margin-bottom:1.2rem;
+  }
+  .hero-eyebrow::before{content:'';width:34px;height:1px;background:var(--blue-light);}
+  .hero h1{
+    font-size:clamp(2.6rem, 8vw, 6.4rem);
+    font-weight:900;
+    line-height:1.02;
+    text-transform:uppercase;
+    background:linear-gradient(180deg,#ffffff 30%, #b9c6d6 100%);
+    -webkit-background-clip:text;background-clip:text;color:transparent;
+    text-shadow:0 10px 60px rgba(0,0,0,0.4);
+  }
+  .hero h1 em{
+    font-style:normal;
+    background:linear-gradient(90deg,var(--blue-light), var(--blue));
+    -webkit-background-clip:text;background-clip:text;color:transparent;
+  }
+  .hero p{
+    margin-top:1.2rem;
+    font-size:clamp(1rem, 2vw, 1.3rem);
+    color:var(--gray);
+    font-weight:400;
+    letter-spacing:0.5px;
+  }
+  .hero-cta{
+    margin-top:2.4rem;
+    display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;
+  }
+  .btn{
+    display:inline-flex;align-items:center;gap:10px;
+    padding:14px 30px;
+    border-radius:999px;
+    font-weight:700;font-size:0.85rem;
+    letter-spacing:1px;text-transform:uppercase;
+    cursor:pointer;border:1px solid transparent;
+    transition:transform .3s ease, box-shadow .3s ease, background .3s ease, border-color .3s ease;
+  }
+  .btn-primary{
+    background:linear-gradient(90deg,var(--blue), var(--blue-light));
+    color:#fff;
+    box-shadow:0 8px 30px rgba(10,108,255,0.35);
+  }
+  .btn-primary:hover{transform:translateY(-3px);box-shadow:0 14px 40px rgba(10,108,255,0.5);}
+  .btn-outline{
+    background:rgba(255,255,255,0.03);
+    border-color:rgba(255,255,255,0.25);
+    color:#fff;
+  }
+  .btn-outline:hover{border-color:var(--blue-light);color:var(--blue-light);transform:translateY(-3px);}
+
+  .scroll-cue{
+    position:absolute;bottom:34px;left:50%;transform:translateX(-50%);
+    display:flex;flex-direction:column;align-items:center;gap:8px;
+    font-size:0.7rem;letter-spacing:3px;text-transform:uppercase;color:var(--gray);
+    z-index:2;
+  }
+  .scroll-cue .line{width:1px;height:38px;background:linear-gradient(var(--blue-light), transparent);
+    animation:scrollLine 1.8s ease-in-out infinite;}
+  @keyframes scrollLine{0%{transform:scaleY(0.2);opacity:0.3;}50%{transform:scaleY(1);opacity:1;}100%{transform:scaleY(0.2);opacity:0.3;}}
+
+  /* ===== GENERAL SECTION ===== */
+  section{
+    position:relative;
+    padding:9rem 6% 7rem;
+  }
+  .section-tag{
+    display:inline-flex;align-items:center;gap:10px;
+    font-size:0.75rem;letter-spacing:4px;text-transform:uppercase;
+    color:var(--blue-light);font-weight:700;margin-bottom:1rem;
+  }
+  .section-tag::before{content:'';width:26px;height:1px;background:var(--blue-light);}
+  .section-title{
+    font-size:clamp(2rem, 4.5vw, 3.4rem);
+    font-weight:800;
+    text-transform:uppercase;
+    margin-bottom:1.4rem;
+    max-width:820px;
+  }
+  .section-lead{
+    color:var(--gray);
+    max-width:640px;
+    font-size:1.05rem;
+    margin-bottom:3.4rem;
+  }
+
+  .reveal{opacity:0;transform:translateY(50px);transition:opacity .9s cubic-bezier(.2,.7,.2,1), transform .9s cubic-bezier(.2,.7,.2,1);}
+  .reveal.visible{opacity:1;transform:translateY(0);}
+  .reveal-delay-1.visible{transition-delay:.1s;}
+  .reveal-delay-2.visible{transition-delay:.22s;}
+  .reveal-delay-3.visible{transition-delay:.34s;}
+
+  /* ===== HISTORIA ===== */
+  #historia{background:linear-gradient(180deg,var(--black), var(--charcoal));}
+  .historia-wrap{
+    display:grid;grid-template-columns:1.05fr 0.95fr;gap:4rem;align-items:center;
+  }
+  .historia-img{
+    position:relative;border-radius:18px;overflow:hidden;
+    box-shadow:0 30px 80px rgba(0,0,0,0.55);
+    border:1px solid rgba(255,255,255,0.08);
+  }
+  .historia-img img{transition:transform .8s ease;}
+  .historia-img:hover img{transform:scale(1.06);}
+  .historia-img .tag{
+    position:absolute;bottom:14px;left:14px;
+    background:rgba(7,7,10,0.7);backdrop-filter:blur(6px);
+    padding:8px 16px;border-radius:999px;font-size:0.75rem;
+    letter-spacing:1px;border:1px solid rgba(255,255,255,0.15);
+  }
+  .timeline{border-left:2px solid rgba(79,168,255,0.25);padding-left:1.8rem;display:flex;flex-direction:column;gap:2rem;}
+  .timeline-item h4{font-size:1.05rem;color:var(--blue-light);margin-bottom:6px;letter-spacing:1px;}
+  .timeline-item p{color:var(--gray);font-size:0.95rem;}
+  .timeline-item{position:relative;}
+  .timeline-item::before{
+    content:'';position:absolute;left:-2.05rem;top:6px;width:10px;height:10px;border-radius:50%;
+    background:var(--blue-light);box-shadow:0 0 0 4px rgba(79,168,255,0.15);
+  }
+
+  /* ===== ESPECIFICACIONES ===== */
+  #specs{background:var(--charcoal);}
+  .specs-grid{
+    display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));
+    gap:1.4rem;
+  }
+  .spec-card{
+    background:rgba(255,255,255,0.035);
+    border:1px solid rgba(255,255,255,0.08);
+    border-radius:18px;
+    padding:2rem 1.6rem;
+    backdrop-filter:blur(10px);
+    -webkit-backdrop-filter:blur(10px);
+    position:relative;overflow:hidden;
+    transition:transform .4s ease, border-color .4s ease, background .4s ease;
+  }
+  .spec-card::after{
+    content:'';position:absolute;inset:0;
+    background:radial-gradient(circle at 30% 0%, rgba(10,108,255,0.18), transparent 60%);
+    opacity:0;transition:opacity .4s ease;
+  }
+  .spec-card:hover{transform:translateY(-8px);border-color:rgba(79,168,255,0.4);}
+  .spec-card:hover::after{opacity:1;}
+  .spec-icon{
+    width:52px;height:52px;border-radius:14px;
+    display:flex;align-items:center;justify-content:center;
+    background:linear-gradient(135deg,var(--blue-deep),var(--blue));
+    font-size:1.3rem;margin-bottom:1.4rem;
+    box-shadow:0 10px 24px rgba(10,108,255,0.3);
+  }
+  .spec-value{font-size:2.1rem;font-weight:900;font-family:var(--font-display);}
+  .spec-unit{font-size:1rem;color:var(--blue-light);font-weight:700;margin-left:4px;}
+  .spec-label{color:var(--gray);font-size:0.85rem;letter-spacing:0.5px;margin-top:6px;}
+  .spec-note{color:var(--gray);font-size:.72rem;margin-top:14px;line-height:1.5;opacity:.75;}
+
+  /* ===== DISEÑO Y VERSIONES ===== */
+  #diseno{background:linear-gradient(180deg,var(--charcoal), var(--black));}
+  .versions-tabs{display:flex;gap:0.6rem;flex-wrap:wrap;margin-bottom:2.6rem;}
+  .tab-btn{
+    padding:10px 22px;border-radius:999px;
+    background:rgba(255,255,255,0.04);
+    border:1px solid rgba(255,255,255,0.1);
+    color:var(--gray);font-size:0.82rem;font-weight:600;letter-spacing:0.6px;
+    cursor:pointer;transition:.3s;
+  }
+  .tab-btn.active,.tab-btn:hover{
+    background:linear-gradient(90deg,var(--blue),var(--blue-light));
+    color:#fff;border-color:transparent;
+  }
+  .tab-panel{display:none;color:var(--gray);max-width:720px;margin-bottom:3rem;font-size:0.98rem;}
+  .tab-panel.active{display:block;}
+  .tab-panel strong{color:#fff;}
+
+  .gallery{
+    display:grid;grid-template-columns:repeat(4,1fr);grid-auto-rows:170px;gap:12px;
+  }
+  .gallery figure{
+    position:relative;border-radius:14px;overflow:hidden;
+    border:1px solid rgba(255,255,255,0.08);
+    cursor:pointer;
+  }
+  .gallery figure:nth-child(1){grid-column:span 2;grid-row:span 2;}
+  .gallery figure:nth-child(4){grid-column:span 2;}
+  .gallery img{width:100%;height:100%;object-fit:cover;transition:transform .6s ease, filter .6s ease;filter:grayscale(20%) brightness(0.85);}
+  .gallery figure:hover img{transform:scale(1.09);filter:grayscale(0%) brightness(1);}
+  .gallery figcaption{
+    position:absolute;bottom:0;left:0;right:0;
+    padding:16px;font-size:0.8rem;font-weight:600;letter-spacing:0.5px;
+    background:linear-gradient(0deg, rgba(0,0,0,0.85), transparent);
+  }
+
+  /* ===== LEGADO ===== */
+  #legado{
+    background:var(--black);
+    text-align:left;
+  }
+  .legado-wrap{display:grid;grid-template-columns:1fr 1fr;gap:4rem;align-items:center;}
+  .legado-img{border-radius:18px;overflow:hidden;border:1px solid rgba(255,255,255,0.08);box-shadow:0 30px 80px rgba(0,0,0,0.5);}
+  .godzilla-badge{
+    display:inline-flex;align-items:center;gap:10px;
+    background:rgba(10,108,255,0.1);border:1px solid rgba(79,168,255,0.3);
+    padding:8px 18px;border-radius:999px;font-size:0.78rem;font-weight:700;
+    letter-spacing:1px;color:var(--blue-light);margin-bottom:1.4rem;
+  }
+  .legado-list{display:flex;flex-direction:column;gap:1.6rem;margin-top:2rem;}
+  .legado-list li{display:flex;gap:1rem;color:var(--gray);font-size:0.98rem;}
+  .legado-list i{color:var(--blue-light);margin-top:4px;}
+  .legado-list b{color:#fff;}
+
+  /* ===== FOOTER ===== */
+  footer{
+    background:var(--charcoal);
+    border-top:1px solid rgba(255,255,255,0.06);
+    padding:4rem 6% 2rem;
+  }
+  .footer-top{
+    display:flex;justify-content:space-between;flex-wrap:wrap;gap:2rem;
+    padding-bottom:2.4rem;border-bottom:1px solid rgba(255,255,255,0.06);
+  }
+  .footer-brand h3{font-size:1.4rem;font-weight:900;letter-spacing:1px;}
+  .footer-brand p{color:var(--gray);font-size:0.85rem;max-width:340px;margin-top:10px;}
+  .footer-social{display:flex;gap:14px;}
+  .footer-social a{
+    width:42px;height:42px;border-radius:50%;
+    display:flex;align-items:center;justify-content:center;
+    border:1px solid rgba(255,255,255,0.12);color:var(--gray);
+    transition:.3s;
+  }
+  .footer-social a:hover{background:var(--blue);color:#fff;border-color:var(--blue);transform:translateY(-4px);}
+  .footer-bottom{
+    display:flex;justify-content:space-between;flex-wrap:wrap;gap:1rem;
+    padding-top:1.6rem;font-size:0.78rem;color:var(--gray);
+  }
+
+  /* Back to top */
+  #backTop{
+    position:fixed;right:26px;bottom:26px;z-index:999;
+    width:52px;height:52px;border-radius:50%;
+    background:rgba(10,108,255,0.9);color:#fff;
+    display:flex;align-items:center;justify-content:center;
+    border:1px solid rgba(255,255,255,0.2);
+    opacity:0;pointer-events:none;transform:translateY(20px);
+    transition:opacity .4s ease, transform .4s ease, background .3s ease;
+    cursor:pointer;box-shadow:0 10px 30px rgba(10,108,255,0.35);
+  }
+  #backTop.show{opacity:1;pointer-events:auto;transform:translateY(0);}
+  #backTop:hover{background:var(--blue-light);}
+
+  /* Responsive */
+  @media (max-width:980px){
+    .historia-wrap, .legado-wrap{grid-template-columns:1fr;gap:2.6rem;}
+    .gallery{grid-template-columns:repeat(2,1fr);}
+    .gallery figure:nth-child(1){grid-column:span 2;grid-row:span 1;height:230px;}
+    .gallery figure:nth-child(4){grid-column:span 1;}
+  }
+  @media (max-width:760px){
+    .nav-links{
+      position:fixed;top:0;right:0;height:100vh;width:72%;
+      background:rgba(7,7,10,0.97);backdrop-filter:blur(14px);
+      flex-direction:column;justify-content:center;align-items:flex-start;
+      gap:2rem;padding:2rem 2.4rem;
+      transform:translateX(100%);transition:transform .45s ease;
+    }
+    .nav-links.open{transform:translateX(0);}
+    .burger{display:flex;}
+    section{padding:6rem 6% 4.5rem;}
+    .specs-grid{grid-template-columns:repeat(2,1fr);}
+  }
+  @media (max-width:480px){
+    .specs-grid{grid-template-columns:1fr;}
+    .gallery{grid-template-columns:1fr 1fr;}
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="navbar" id="navbar">
+  <a href="#inicio" class="nav-logo">GT-R <span>R34</span></a>
+  <ul class="nav-links" id="navLinks">
+    <li><a href="#inicio">Inicio</a></li>
+    <li><a href="#historia">Historia</a></li>
+    <li><a href="#specs">Especificaciones</a></li>
+    <li><a href="#diseno">Diseño</a></li>
+    <li><a href="#legado">Legado</a></li>
+  </ul>
+  <div class="burger" id="burger"><span></span><span></span><span></span></div>
+</nav>
+
+<!-- HERO -->
+<section class="hero" id="inicio">
+  <div class="hero-bg" id="heroBg"></div>
+  <div class="hero-grid"></div>
+  <div class="hero-content">
+    <div class="hero-eyebrow">BNR34 · 1999–2002</div>
+    <h1>Nissan Skyline<br><em>GT-R R34</em></h1>
+    <p>La leyenda del automovilismo japonés</p>
+    <div class="hero-cta">
+      <a href="#historia" class="btn btn-primary"><i class="fa-solid fa-flag-checkered"></i> Descubrir la leyenda</a>
+      <a href="#specs" class="btn btn-outline"><i class="fa-solid fa-gauge-high"></i> Ver especificaciones</a>
+    </div>
+  </div>
+  <div class="scroll-cue"><span class="line"></span>SCROLL</div>
+</section>
+
+<!-- HISTORIA -->
+<section id="historia">
+  <div class="section-tag reveal">01 · Origen</div>
+  <h2 class="section-title reveal">Una leyenda forjada en Japón</h2>
+  <p class="section-lead reveal">Del linaje Skyline a la coronación como ícono del JDM: así nació el R34.</p>
+
+  <div class="historia-wrap">
+    <div class="historia-img reveal">
+      <img src="https://commons.wikimedia.org/wiki/Special:FilePath/1999%20Nissan%20Skyline%20R34%20GTR%20(14349590384).jpg?width=1200" alt="Nissan Skyline GT-R R34 clásico" loading="lazy">
+      <span class="tag">BNR34 · Serie original 1999</span>
+    </div>
+    <div class="timeline reveal reveal-delay-1">
+      <div class="timeline-item">
+        <h4>Enero de 1999 — El nacimiento</h4>
+        <p>Nissan presentó el GF-BNR34 Skyline GT-R, la quinta generación del ícono, con una carrocería más corta y compacta que su predecesor para mejorar la maniobrabilidad y responder a las críticas sobre el tamaño del R33.</p>
+      </div>
+      <div class="timeline-item">
+        <h4>Evolución respecto al R32 y R33</h4>
+        <p>El R34 heredó el legendario motor RB26DETT y la tracción integral ATTESA E-TS, pero refinó la aerodinámica, rigidizó el chasis y añadió una pantalla multifunción LCD en el tablero, inédita en la serie.</p>
+      </div>
+      <div class="timeline-item">
+        <h4>2002 — El final de una era</h4>
+        <p>La producción cesó en 2002 para dar paso al Nissan GT-R moderno, dejando al R34 como el último Skyline GT-R "puro" y el más deseado por coleccionistas y entusiastas en todo el mundo.</p>
+      </div>
+      <div class="timeline-item">
+        <h4>Importancia cultural</h4>
+        <p>El R34 se convirtió en sinónimo de la ingeniería japonesa de altas prestaciones, influyendo en una generación de aficionados al tuning, el motorsport y la cultura JDM global.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ESPECIFICACIONES -->
+<section id="specs">
+  <div class="section-tag reveal">02 · Ingeniería</div>
+  <h2 class="section-title reveal">Especificaciones técnicas</h2>
+  <p class="section-lead reveal">Los números que convirtieron al R34 en un referente del rendimiento japonés.</p>
+
+  <div class="specs-grid">
+    <div class="spec-card reveal">
+      <div class="spec-icon"><i class="fa-solid fa-engine"></i></div>
+      <div class="spec-value">RB26<span class="spec-unit">DETT</span></div>
+      <div class="spec-label">Motor 2.6L Twin Turbo, 6 cilindros en línea</div>
+    </div>
+    <div class="spec-card reveal reveal-delay-1">
+      <div class="spec-icon"><i class="fa-solid fa-horse"></i></div>
+      <div class="spec-value">280<span class="spec-unit">HP</span></div>
+      <div class="spec-label">Potencia oficial declarada</div>
+      <div class="spec-note">Cifra del "acuerdo de caballos" de la industria japonesa; la potencia real medida solía ser mayor.</div>
+    </div>
+    <div class="spec-card reveal reveal-delay-2">
+      <div class="spec-icon"><i class="fa-solid fa-arrows-split-up-and-left"></i></div>
+      <div class="spec-value">4WD</div>
+      <div class="spec-label">Tracción integral ATTESA E-TS</div>
+    </div>
+    <div class="spec-card reveal reveal-delay-3">
+      <div class="spec-icon"><i class="fa-solid fa-gears"></i></div>
+      <div class="spec-value">6<span class="spec-unit">MT</span></div>
+      <div class="spec-label">Transmisión manual de 6 velocidades</div>
+    </div>
+    <div class="spec-card reveal">
+      <div class="spec-icon"><i class="fa-solid fa-gauge-high"></i></div>
+      <div class="spec-value">250<span class="spec-unit">km/h</span></div>
+      <div class="spec-label">Velocidad máxima (limitada de fábrica)</div>
+    </div>
+    <div class="spec-card reveal reveal-delay-1">
+      <div class="spec-icon"><i class="fa-solid fa-stopwatch"></i></div>
+      <div class="spec-value">~5<span class="spec-unit">seg</span></div>
+      <div class="spec-label">0–100 km/h aproximado</div>
+      <div class="spec-note">Cifra aproximada; varía según versión, condiciones de prueba y fuente.</div>
+    </div>
+  </div>
+</section>
+
+<!-- DISEÑO Y VERSIONES -->
+<section id="diseno">
+  <div class="section-tag reveal">03 · Estilo</div>
+  <h2 class="section-title reveal">Diseño y versiones</h2>
+  <p class="section-lead reveal">Líneas angulares, aerodinámica funcional y una gama de versiones que definieron distintos niveles de rendimiento.</p>
+
+  <div class="versions-tabs reveal">
+    <button class="tab-btn active" data-tab="base">Base</button>
+    <button class="tab-btn" data-tab="vspec">V-Spec</button>
+    <button class="tab-btn" data-tab="vspec2">V-Spec II</button>
+    <button class="tab-btn" data-tab="nur">Nür</button>
+  </div>
+
+  <div class="tab-panel active" id="base">
+    <p><strong>GT-R (Base):</strong> El punto de partida de la gama, con el motor RB26DETT, tracción ATTESA E-TS estándar y una carrocería reconocible por su capó con toma de aire y su icónico spoiler trasero de aluminio ajustable.</p>
+  </div>
+  <div class="tab-panel" id="vspec">
+    <p><strong>V-Spec (Victory Specification):</strong> Incorporó el sistema ATTESA E-TS Pro con diferencial trasero activo, suspensión revisada y neumáticos de mayor desempeño, pensada para quienes buscaban una conducción más precisa en circuito.</p>
+  </div>
+  <div class="tab-panel" id="vspec2">
+    <p><strong>V-Spec II:</strong> Sumó un capó de fibra de carbono para reducir peso y mejorar el enfriamiento, además de ajustes adicionales de suspensión respecto al V-Spec original.</p>
+  </div>
+  <div class="tab-panel" id="nur">
+    <p><strong>Nür:</strong> Homenaje al circuito de Nürburgring, donde Nissan desarrolló el modelo. Fue la última edición de producción del R34, con una versión reforzada del motor RB26 y detalles distintivos como el velocímetro hasta 300 km/h.</p>
+  </div>
+
+  <div class="gallery">
+    <figure class="reveal">
+      <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Nissan%20SKYLINE%20GT-R%20(GF-BNR34)%20rear.jpg?width=900" alt="Vista trasera del Nissan Skyline GT-R R34" loading="lazy">
+      <figcaption>Vista trasera · spoiler icónico</figcaption>
+    </figure>
+    <figure class="reveal reveal-delay-1">
+      <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Nissan%20Skyline%20R34%20GT-R%20black.jpg?width=900" alt="Nissan Skyline GT-R R34 en color negro" loading="lazy">
+      <figcaption>Edición en negro</figcaption>
+    </figure>
+    <figure class="reveal reveal-delay-2">
+      <img src="https://commons.wikimedia.org/wiki/Special:FilePath/BNR34.%20(22576424424).jpg?width=900" alt="Nissan Skyline BNR34 de perfil" loading="lazy">
+      <figcaption>Perfil lateral BNR34</figcaption>
+    </figure>
+    <figure class="reveal reveal-delay-3">
+      <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Nissan%20Skyline%20R34%20GT-R%20N%C3%BCr%20001.jpg?width=1200" alt="Nissan Skyline GT-R R34 Nür" loading="lazy">
+      <figcaption>Edición Nür · el final de la saga</figcaption>
+    </figure>
+  </div>
+</section>
+
+<!-- LEGADO -->
+<section id="legado">
+  <div class="section-tag reveal">04 · Inmortal</div>
+  <h2 class="section-title reveal">El legado de Godzilla</h2>
+
+  <div class="legado-wrap">
+    <div class="legado-img reveal">
+      <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Godzilla!%20Nissan%20Skyline%20GTR%20R34%2C%20Bangladesh.%20(42236083381).jpg?width=1200" alt="Nissan Skyline GT-R R34 apodado Godzilla" loading="lazy">
+    </div>
+    <div class="reveal reveal-delay-1">
+      <div class="godzilla-badge"><i class="fa-solid fa-city"></i> ¿Por qué "Godzilla"?</div>
+      <p style="color:var(--gray);font-size:1rem;">El sobrenombre nació con el R32 en la revista australiana <em>Wheels</em>, que quedó impresionada por su dominio en las pistas. El apodo se mantuvo a lo largo de las generaciones, y al llegar el R34, la propia publicación lo describió como el mejor auto de manejo que habían probado hasta entonces.</p>
+      <ul class="legado-list">
+        <li><i class="fa-solid fa-gamepad"></i><span><b>Videojuegos:</b> el R34 es un vehículo emblemático en sagas como Gran Turismo y Need for Speed, donde generaciones de jugadores lo descubrieron antes incluso de verlo en la calle.</span></li>
+        <li><i class="fa-solid fa-film"></i><span><b>Rápidos y Furiosos:</b> el personaje Brian O'Conner lo condujo en "2 Fast 2 Furious", consolidando su estatus como ícono pop fuera de Japón.</span></li>
+        <li><i class="fa-solid fa-trophy"></i><span><b>Herencia en pista:</b> su ingeniería y filosofía de tracción integral sentaron las bases del Nissan GT-R moderno.</span></li>
+      </ul>
+      <p style="margin-top:1.6rem;color:var(--gray);font-size:0.95rem;">Más de dos décadas después de su debut, el R34 sigue siendo una referencia obligada: un auto que trascendió su época para convertirse en un símbolo cultural del automovilismo japonés.</p>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-top">
+    <div class="footer-brand">
+      <h3>GT-R <span style="color:var(--blue-light);">R34</span></h3>
+      <p>Sitio tributo no oficial dedicado al Nissan Skyline GT-R R34. Contenido con fines informativos y de fanático.</p>
+    </div>
+    <div class="footer-social">
+      <a href="#" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
+      <a href="#" aria-label="YouTube"><i class="fa-brands fa-youtube"></i></a>
+      <a href="#" aria-label="X"><i class="fa-brands fa-x-twitter"></i></a>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2026 Tributo GT-R R34. Proyecto de fans, sin afiliación oficial con Nissan Motor Co.</span>
+    <span>Imágenes vía Wikimedia Commons</span>
+  </div>
+</footer>
+
+<div id="backTop"><i class="fa-solid fa-arrow-up"></i></div>
+
+<script>
+  // Navbar scroll state
+  const navbar = document.getElementById('navbar');
+  const backTop = document.getElementById('backTop');
+  const heroBg = document.getElementById('heroBg');
+
+  window.addEventListener('scroll', () => {
+    const y = window.scrollY;
+    navbar.classList.toggle('scrolled', y > 40);
+    backTop.classList.toggle('show', y > 500);
+    // Parallax hero
+    if(y < window.innerHeight){
+      heroBg.style.transform = `scale(1.08) translateY(${y * 0.25}px)`;
+    }
+  });
+
+  // Mobile menu
+  const burger = document.getElementById('burger');
+  const navLinks = document.getElementById('navLinks');
+  burger.addEventListener('click', () => {
+    navLinks.classList.toggle('open');
+    burger.classList.toggle('active');
+  });
+  navLinks.querySelectorAll('a').forEach(a => {
+    a.addEventListener('click', () => navLinks.classList.remove('open'));
+  });
+
+  // Back to top
+  backTop.addEventListener('click', () => window.scrollTo({top:0, behavior:'smooth'}));
+
+  // Scroll reveal
+  const revealEls = document.querySelectorAll('.reveal');
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if(entry.isIntersecting){
+        entry.target.classList.add('visible');
+        io.unobserve(entry.target);
+      }
+    });
+  }, {threshold:0.15});
+  revealEls.forEach(el => io.observe(el));
+
+  // Tabs (Diseño y Versiones)
+  const tabBtns = document.querySelectorAll('.tab-btn');
+  const tabPanels = document.querySelectorAll('.tab-panel');
+  tabBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      tabBtns.forEach(b => b.classList.remove('active'));
+      tabPanels.forEach(p => p.classList.remove('active'));
+      btn.classList.add('active');
+      document.getElementById(btn.dataset.tab).classList.add('active');
+    });
+  });
+</script>
+</body>
+</html>
